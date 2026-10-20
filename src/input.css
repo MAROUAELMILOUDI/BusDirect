@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* Tell Tailwind where to look for the classes used in the HTML. */
+@source "../index.html";
+
+/* Small custom theme: colors and font used by BusDirect. */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand: #1b4dff;
+  --color-brand-dark: #1540dd;
+  --color-ink: #0b1736;
+  --color-muted: #667085;
+  --color-line: #e5e9f2;
+  --color-page: #f5f7ff;
+}
