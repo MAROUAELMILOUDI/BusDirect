@@ -10,11 +10,11 @@ let reservations = [];
 let timer;
 
 for (let i = 0; i < places.length; i++) {
-    const numero = places[i].querySelector(".numero").textContent;
+    const numero = places[i].querySelector(".numero").textContent.trim();
     const nom = places[i].querySelector(".statut").textContent.trim();
     if (nom !== "Libre") {
         reservations.push({
-            siege: numero.trim(),
+            siege: numero,
             nom: nom
         });
     }
@@ -25,9 +25,9 @@ function afficherNotification(message, type) {
     notification.textContent = message;
     notification.classList.remove("hidden", "bg-green-100", "text-green-800", "bg-red-100", "text-red-800");
     if (type === "succes") {
-        notification.classList.add("bg-green-100", "text-green-800");
-    } else {
         notification.classList.add("bg-red-100", "text-red-800");
+    } else {
+        notification.classList.add("bg-green-100", "text-green-800");
     }
     timer = setTimeout(function () {
         notification.classList.add("hidden");
@@ -48,11 +48,10 @@ function remplirSieges() {
 remplirSieges();
 
 btnreservation.addEventListener("click", function () {
-    const nomPassager = inputNom.value.trim();
+    const nomValeur = inputNom.value.trim();
     let numeroChoisi = siege.value;
-
-    if (nomPassager === "") {
-        alert("Entrez le nom du passager");
+    if (nomValeur === "") {
+        afficherNotification("Entrez le nom du passager");
         return;
     }
     if (numeroChoisi === "auto") {
@@ -65,33 +64,33 @@ btnreservation.addEventListener("click", function () {
             }
         }
         if (!trouve) {
-            alert("Le bus est complet");
+            afficherNotification("Le bus est complet");
             return;
         }
-    }
-
+    } 
     for (let i = 0; i < places.length; i++) {
         const numero = places[i].querySelector(".numero").textContent.trim();
         const statut = places[i].querySelector(".statut");
 
         if (numero === numeroChoisi) {
             if (statut.textContent.trim() !== "Libre") {
-                alert("Ce siège est déjà réservé");
+                afficherNotification("Ce siège est déjà réservé");
                 return;
             }
             places[i].classList.remove("bg-white", "border-[#1D4BFF]", "text-[#1D4BFF]");
             places[i].classList.add("bg-[#1D4BFF]", "border-[#1D4BFF]", "text-white");
 
-            statut.textContent = nomPassager;
+            statut.textContent = nomValeur;
             statut.classList.remove("text-gray-500", "text-[#1D4BFF]");
             statut.classList.add("truncate", "text-white");
+            reservations.push({
+                siege: numeroChoisi,
+                nom: nomValeur
+            })
+            afficherNotification("Siége " + numeroChoisi + " réservé pour " + nomValeur, "sucees")
             break;
         }
-    }
-    reservation.push({
-        siege: numeroChoisi,
-        nom: nomPassager
-    })
+    } 
     inputNom.value = "";
     remplirSieges();
 });
