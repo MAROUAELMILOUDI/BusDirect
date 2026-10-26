@@ -4,6 +4,9 @@ const inputNom = document.getElementById("reserver-nom");
 const siege = document.getElementById("reserver-siege");
 const btnreservation = document.getElementById("reservbtn");
 
+const deltReserve = document.getElementById("supprimer-reservation");
+const deltbtn = document.getElementById("suppressionbtn");
+
 const notification = document.getElementById("notification");
 
 let reservations = [];
@@ -24,10 +27,10 @@ function afficherNotification(message, type) {
     clearTimeout(timer);
     notification.textContent = message;
     notification.classList.remove("hidden", "bg-green-100", "text-green-800", "bg-red-100", "text-red-800");
-    if (type === "succes") {
-        notification.classList.add("bg-red-100", "text-red-800");
-    } else {
+    if (type === "succes"){
         notification.classList.add("bg-green-100", "text-green-800");
+    } else if (type === "erreur") {
+        notification.classList.add("bg-red-100", "text-red-800");
     }
     timer = setTimeout(function () {
         notification.classList.add("hidden");
@@ -51,7 +54,7 @@ btnreservation.addEventListener("click", function () {
     const nomValeur = inputNom.value.trim();
     let numeroChoisi = siege.value;
     if (nomValeur === "") {
-        afficherNotification("Entrez le nom du passager");
+        afficherNotification("Entrez le nom du passager", "erreur");
         return;
     }
     if (numeroChoisi === "auto") {
@@ -64,7 +67,7 @@ btnreservation.addEventListener("click", function () {
             }
         }
         if (!trouve) {
-            afficherNotification("Le bus est complet");
+            afficherNotification("Le bus est complet", "erreur");
             return;
         }
     } 
@@ -74,7 +77,7 @@ btnreservation.addEventListener("click", function () {
 
         if (numero === numeroChoisi) {
             if (statut.textContent.trim() !== "Libre") {
-                afficherNotification("Ce siège est déjà réservé");
+                afficherNotification("Ce siège est déjà réservé", "erreur");
                 return;
             }
             places[i].classList.remove("bg-white", "border-[#1D4BFF]", "text-[#1D4BFF]");
@@ -87,10 +90,53 @@ btnreservation.addEventListener("click", function () {
                 siege: numeroChoisi,
                 nom: nomValeur
             })
-            afficherNotification("Siége " + numeroChoisi + " réservé pour " + nomValeur, "sucees")
+            afficherNotification("Siége " + numeroChoisi + " réservé pour " + nomValeur, "succes");
             break;
         }
     } 
     inputNom.value = "";
     remplirSieges();
+});
+
+
+function remplirSiegesOcuppe() {
+    deltReserve.innerHTML = "<option value=''>Choisir un siège</option>";
+    for (let i = 0; i < places.length; i++) {
+        const numero = places[i].querySelector(".numero").textContent.trim();
+        const etat = places[i].querySelector(".statut").textContent.trim();
+        if (etat !== "Libre") {
+            deltReserve.innerHTML += "<option value='" + numero + "'>Siège " + numero + " (" + etat + ")</option>";
+        }
+    }
+}
+remplirSiegesOcuppe()
+
+deltbtn.addEventListener("click", function () {
+    const numeroChoisi = deltReserve.value;
+    if (numeroChoisi === "") {
+        afficherNotification("choisisser un siège a supprimer", "erreur");
+        return;
+    }
+    for(let i=0; i<places.length; i++){
+        const numero = places[i].querySelector('.numero').textContent.trim();
+        const etat = places[i].querySelector('.statut');
+        if (numeroChoisi === numero){
+            places[i].classList.remove("bg-[#1D4BFF]", "text-white");
+            places[i].classList.add("bg-white", "border-[#1D4BFF]", "text-[#1D4BFF]");
+
+            etat.textContent = "Libre";
+            etat.classList.remove("truncate", "text-white");
+            etat.classList.add('text-gray-500');
+            for(let j=0; j<reservations.length; j++){
+                if(reservations[j].siege === numeroChoisi){
+                    reservations.splice(j, 1);
+                    break;
+                }
+            }
+            afficherNotification("Reservation du siège " + numeroChoisi + " supprimée", "succes");
+            break;
+        }
+    }
+    remplirSieges();
+    remplirSiegesOcuppe();
 });
