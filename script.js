@@ -1,7 +1,38 @@
 const places = document.querySelectorAll(".Place");
+
 const inputNom = document.getElementById("reserver-nom");
 const siege = document.getElementById("reserver-siege");
 const btnreservation = document.getElementById("reservbtn");
+
+const notification = document.getElementById("notification");
+
+let reservations = [];
+let timer;
+
+for (let i = 0; i < places.length; i++) {
+    const numero = places[i].querySelector(".numero").textContent;
+    const nom = places[i].querySelector(".statut").textContent.trim();
+    if (nom !== "Libre") {
+        reservations.push({
+            siege: numero.trim(),
+            nom: nom
+        });
+    }
+}
+
+function afficherNotification(message, type) {
+    clearTimeout(timer);
+    notification.textContent = message;
+    notification.classList.remove("hidden", "bg-green-100", "text-green-800", "bg-red-100", "text-red-800");
+    if (type === "succes") {
+        notification.classList.add("bg-green-100", "text-green-800");
+    } else {
+        notification.classList.add("bg-red-100", "text-red-800");
+    }
+    timer = setTimeout(function () {
+        notification.classList.add("hidden");
+    }, 3000);
+}
 
 function remplirSieges() {
     siege.innerHTML = "<option value='auto'>Attribution automatique</option>";
@@ -48,16 +79,19 @@ btnreservation.addEventListener("click", function () {
                 alert("Ce siège est déjà réservé");
                 return;
             }
-            places[i].classList.remove("bg-white", "border-blue-500", "text-blue-600");
-            places[i].classList.add("bg-blue-600", "border-blue-600", "text-white");
+            places[i].classList.remove("bg-white", "border-[#1D4BFF]", "text-[#1D4BFF]");
+            places[i].classList.add("bg-[#1D4BFF]", "border-[#1D4BFF]", "text-white");
 
             statut.textContent = nomPassager;
-            statut.classList.remove("text-gray-500", "text-blue-600");
+            statut.classList.remove("text-gray-500", "text-[#1D4BFF]");
             statut.classList.add("truncate", "text-white");
             break;
         }
     }
-
+    reservation.push({
+        siege: numeroChoisi,
+        nom: nomPassager
+    })
     inputNom.value = "";
     remplirSieges();
 });
