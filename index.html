@@ -179,6 +179,22 @@
         <p class="mt-4 text-center text-xs font-medium tracking-widest text-[#5B6785]">ARRIÈRE DU BUS</p>
       </div>
     </section>
+    <div class="grid w-full gap-6 lg:grid-cols-3 lg:items-start">
+      <section class="shadow rounded-2xl border border-[#E1E8F5] bg-white p-5">
+        <h2 class="text-lg font-bold text-[#0F1B3D]">Réserver une place</h2>
+        <form action="#" class="mt-4 flex flex-col gap-4">
+          <div>
+            <label for="reserver-nom" class="block text-sm font-medium text-[#0F1B3D]">Nom du passager</label>
+            <input id="reserver-nom" type="text" placeholder="Entrez le nom du passager" class="mt-1 w-full rounded-lg border border-[#E1E8F5] bg-[#F4F7FD] px-3 py-2.5 text-sm text-[#0F1B3D] placeholder:text-[#8A96B2] focus:border-[#1D4BFF] focus:outline-none focus:ring-2 focus:ring-[#1D4BFF]/30">
+          </div>
+          <div>
+            <label for="reserver-siege" class="block text-sm font-medium text-[#0F1B3D]">Numéro du siège</label>
+            <select id="reserver-siege" class="mt-1 w-full rounded-lg border border-[#E1E8F5] bg-[#F4F7FD] px-3 py-2.5 text-sm text-[#0F1B3D] focus:border-[#1D4BFF] focus:outline-none focus:ring-2 focus:ring-[#1D4BFF]/30"></select>
+          </div>
+          <button id="reservbtn" type="button" class="w-full rounded-lg bg-[#1D4BFF] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#1639CC] focus:outline-none focus:ring-2 focus:ring-[#1D4BFF] focus:ring-offset-2">Réserver</button>
+        </form>
+      </section>
+    </div>
   </main>
 </body>
 </html>
