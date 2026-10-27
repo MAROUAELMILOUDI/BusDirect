@@ -6,8 +6,9 @@ const btnreservation = document.getElementById("reservbtn");
 
 const deltReserve = document.getElementById("supprimer-reservation");
 const deltbtn = document.getElementById("suppressionbtn");
+ 
+const notification = document.getElementById('notification');
 
-const notification = document.getElementById("notification");
 
 let reservations = [];
 let timer;
@@ -23,8 +24,21 @@ for (let i = 0; i < places.length; i++) {
     }
 }
 
-function afficherNotification(message, type) {
-    clearTimeout(timer);
+function statistiques(){
+    const placesDispo = document.getElementById('availableSeats');
+    const prixTotal = document.getElementById('totalRevenue');
+    let places = 20;
+    let total = 0;
+    for(let i=0; i < reservations.length; i++){
+        places -= 1;
+        total += 80;
+    }
+    placesDispo.textContent = places;
+    prixTotal.textContent = total + 'DH'
+}
+
+function afficherNotification(message, type) { 
+    clearTimeout('timer');
     notification.textContent = message;
     notification.classList.remove("hidden", "bg-green-100", "text-green-800", "bg-red-100", "text-red-800");
     if (type === "succes"){
@@ -46,11 +60,14 @@ function remplirSieges() {
             siege.innerHTML += "<option value='" + numero + "'>Siège " + numero + "</option>";
         }
     }
+    statistiques();
+    sauvegarder();
 }
 
 remplirSieges();
 
-btnreservation.addEventListener("click", function () {
+btnreservation.addEventListener("click", function (event) {
+    event.preventDefault()
     const nomValeur = inputNom.value.trim();
     let numeroChoisi = siege.value;
     if (nomValeur === "") {
@@ -108,10 +125,13 @@ function remplirSiegesOcuppe() {
             deltReserve.innerHTML += "<option value='" + numero + "'>Siège " + numero + " (" + etat + ")</option>";
         }
     }
+    statistiques();
+    sauvegarder();
 }
 remplirSiegesOcuppe()
 
-deltbtn.addEventListener("click", function () {
+deltbtn.addEventListener("click", function (event) {
+    event.preventDefault()
     const numeroChoisi = deltReserve.value;
     if (numeroChoisi === "") {
         afficherNotification("choisisser un siège a supprimer", "erreur");
@@ -140,3 +160,7 @@ deltbtn.addEventListener("click", function () {
     remplirSieges();
     remplirSiegesOcuppe();
 });
+
+function sauvegarder(){
+    localStorage.setItem("reservations", JSON.stringify(reservations))
+}
